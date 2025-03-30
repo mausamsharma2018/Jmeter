@@ -17,10 +17,11 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y openjdk-11-jre-headless
-          wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.6.2.tgz
-          tar -xzf apache-jmeter-5.6.2.tgz
-          echo "JMETER_HOME=$PWD/apache-jmeter-5.6.2" >> $GITHUB_ENV
-          echo "$PWD/apache-jmeter-5.6.2/bin" >> $GITHUB_PATH
+          JMETER_VERSION=$(curl -s https://jmeter.apache.org/download_jmeter.cgi | grep -oP '(?<=binaries/apache-jmeter-)[0-9.]+(?=\.tgz)' | head -1)
+          wget "https://downloads.apache.org/jmeter/binaries/apache-jmeter-$JMETER_VERSION.tgz"
+          tar -xzf apache-jmeter-$JMETER_VERSION.tgz
+          echo "JMETER_HOME=$PWD/apache-jmeter-$JMETER_VERSION" >> $GITHUB_ENV
+          echo "$PWD/apache-jmeter-$JMETER_VERSION/bin" >> $GITHUB_PATH
 
       - name: Run JMeter test
         run: |
