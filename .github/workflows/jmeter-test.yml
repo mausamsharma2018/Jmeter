@@ -1,0 +1,33 @@
+name: Run JMeter Test
+
+on:
+  push:
+    branches:
+      - main  # Runs the test when changes are pushed to 'main' branch
+
+jobs:
+  jmeter-test:
+    runs-on: ubuntu-latest  # Use a Linux runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Fetch the latest code from GitHub
+
+      - name: Install JMeter
+        run: |
+          sudo apt update
+          sudo apt install -y openjdk-11-jre-headless
+          wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.6.2.tgz
+          tar -xzf apache-jmeter-5.6.2.tgz
+          echo "JMETER_HOME=$PWD/apache-jmeter-5.6.2" >> $GITHUB_ENV
+          echo "$PWD/apache-jmeter-5.6.2/bin" >> $GITHUB_PATH
+
+      - name: Run JMeter test
+        run: |
+          jmeter -n -t ThreadGroup.jmx -l results.jtl  # Run JMeter in non-GUI mode
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-results
+          path: results.jtl  # Store results in GitHub Actions artifacts
