@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3  # Fetch the latest code from GitHub
+        uses: actions/checkout@v4  # Fetch the latest code from GitHub
 
       - name: Install JMeter
         run: |
@@ -27,7 +27,7 @@ jobs:
           jmeter -n -t ThreadGroup.jmx -l results.jtl  # Run JMeter in non-GUI mode
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jmeter-results
           path: results.jtl  # Store results in GitHub Actions artifacts
